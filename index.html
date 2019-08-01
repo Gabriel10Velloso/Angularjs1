@@ -1,0 +1,24 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="helloWorld">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rodrigo Branas</title>
+    <script src="angular.js"></script>
+    
+    <script>
+        angular.module("helloWorld", []); // cria o módulo
+        angular.module("helloWorld").controller("helloWorldController", function($scope){ // localizo o módulo e adiciono o $scope (ligar view ao controller)
+                                                                                              // $scope porta de entrada pra view  
+                $scope.message = "Hello world!";
+        }); 
+    </script>
+</head>
+<body>
+    <div ng-controller="helloWorldController">
+            {{message}}
+    </div>
+    
+</body>
+</html>
