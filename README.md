@@ -29,7 +29,7 @@
 ````
 
 
-#AngularJS #2 - Usando Diretivas - Parte 1 - Rodrigo Branas
+# AngularJS #2 - Usando Diretivas 
 
 ````
 <!DOCTYPE html>
@@ -146,5 +146,81 @@
 </body>
 
 </html>
+
+````
+
+# AngularJS #3
+
+````
+https://www.youtube.com/watch?v=VcF7SySRkHs&list=PLQCmSnNFVYnTD5p2fR4EXmtlR6jQJMbPb&index=3
+
+========================== ng-class ================================
+
+<tr ng-class="{selecionado: contato.selecionado, negrito: contato.selecionado}" ng-repeat="contato in contatos">
+OU
+<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos">
+
+
+
+
+<table class="table">
+    <tr>
+        <th></th>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>Operadora</th>
+    </tr>
+
+    <tr ng-class="{selecionado: contato.selecionado}" ng-repeat="contato in contatos">
+        <!-- ng-bind (do $scope para view) -->
+        <td><input type="checkbox" ng-model="contato.selecionado"></td>
+        <td>{{contato.nome}}</td>
+        <td>{{contato.telefone}}</td>
+        <td>{{contato.operadora.nome}}</td>
+        <!-- OU -->
+        <!-- <td ng-repeat="(key, value) in contato"> {{key + '-' + value}}</td> -->
+
+        <!-- ngModel (do view para o $scope ) --- (aplico nos input,selects, textareas) -->
+    </tr>
+</table>
+
+
+========================== ng-disabled ================================
+
+ <button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone">Adicionar Contato</button>
+
+
+<!-- REMOVER CONTATOS--> 25 minutos
+
+$scope.apagarContatos = (contatos) => {
+        var contatosSelecionado =  contatos.filter((contato) => {
+            if (contato.selecionado) return contato;
+        });
+        // console.log(contatosSelecionado);
+        
+}
+
+$scope.apagarContatos = (contatos) => {
+    $scope.contatos =  contatos.filter((contato) => {
+        if (!contato.selecionado) return contato;
+    });
+}
+
+
+$scope.isContatoSelecionado = (contatos) => { 
+    var isContatoSelecionado =   contatos.some(function(contato) {
+        return contato.selecionado; // se um dos contatos for true volta true e o botão habilita 
+    });
+    console.log(isContatoSelecionado);   
+}
+
+
+========================== ng-style ================================ 33 minutos
+
+========================== ngShow, ngHide e ngIf ================================ 35 minutos
+
+========================== ngInclude ================================ 39 minutos
+
+
 
 ````

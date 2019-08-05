@@ -28,6 +28,15 @@
         .form-control {
             margin-bottom: 10px;
         }
+        .selecionado {
+            background: yellow;
+        }
+        .negrito {
+            font-weight: bolder; 
+        }
+        .corletra {
+            color: red
+        }
     </style>
 
     <script src="lib/angular.js"></script>
@@ -37,9 +46,24 @@
             // $scope porta de entrada pra view  
             $scope.app = "Lista Telefonica";
             $scope.contatos = [
-                { nome: "Pedro", telefone: "999999999" },
-                { nome: "Ana", telefone: "000000000" },
-                { nome: "Gabriel", telefone: "11111111" },
+                { nome: "Pedro", telefone: "999999999", cor: 'blue' },
+                { nome: "Ana", telefone: "000000000", cor: 'yellow' },
+                { nome: "Gabriel", telefone: "11111111", cor: 'red' },
+            ];
+            // <!-- ⛳ FORMA1 - NG-OPTIONS -->
+            // $scope.operadoras = [
+            //     { nome: "Oi", codigo: 14 },
+            //     { nome: "Vivo", codigo: 15},
+            //     { nome: "Tim", codigo: 41 },
+            // ];
+
+            // <!-- ⛳ FORMA2 - NG-OPTIONS -->
+            $scope.operadoras = [
+                { nome: "Oi", codigo: 14, categoria: 'Celular' },
+                { nome: "Vivo", codigo: 15,categoria: 'Celular'},
+                { nome: "Tim", codigo: 41,categoria: 'Celular' },
+                { nome: "GVT", codigo: 25,categoria: 'Fixo' },
+                { nome: "Embratel", codigo: 21,categoria: 'Fixo' },
             ];
 
             // ⏩ FORMA 1
@@ -61,6 +85,19 @@
                 $scope.contatos.push(angular.copy(contato)); // sem o angular.copy a tabela adicionada continua recebendo o bind
                 delete $scope.contato; // remove o contato do input após deletar
             }
+
+            $scope.apagarContatos = (contatos) => {
+              $scope.contatos =  contatos.filter((contato) => {
+                    if (!contato.selecionado) return contato;
+                });
+            }
+
+            $scope.isContatoSelecionado = (contatos) => { 
+              return contatos.some(function(contato) {
+                    return contato.selecionado; // se um dos contatos for true volta true e o botão habilita 
+                });
+                // console.log(isContatoSelecionado);   
+            }
         }); 
     </script>
 </head>
@@ -69,20 +106,28 @@
     <div class="jumbotron">
         <!-- <h4 ng-bind="app"></h4> -->
         <h4>{{app}}</h4>
-        <table class="table table-striped">
+        <table class="table" ng-show="contatos.length > 0">
             <tr>
+                <th></th>
                 <th>Nome</th>
                 <th>Telefone</th>
+                <th>Operadora</th>
+                <th></th>
             </tr>
 
-            <tr ng-repeat="contato in contatos">
+            <tr ng-class="{'selecionado negrito, corletra': contato.selecionado}" ng-repeat="contato in contatos">
                 <!-- ng-bind (do $scope para view) -->
+                <td><input type="checkbox" ng-model="contato.selecionado"></td>
                 <td>{{contato.nome}}</td>
                 <td>{{contato.telefone}}</td>
+                <td>{{contato.operadora.nome}}</td>
                 <!-- OU -->
                 <!-- <td ng-repeat="(key, value) in contato"> {{key + '-' + value}}</td> -->
 
                 <!-- ngModel (do view para o $scope ) --- (aplico nos input,selects, textareas) -->
+
+                <!-- ========================== ng-style ================================ 33 minutos -->
+                <td><div style="width: 20px; height: 20px;  background: yellow" ng-style="{'background': contato.cor}" ></div></td>
             </tr>
         </table>
         <hr>
@@ -104,10 +149,29 @@
         <!-- ⌛ FORMA 2 -->
         <!-- <button class="btn btn-primary btn-block" ng-click="adicionarContato(nome, telefone)">Adicionar Contato</button> -->
 
-        <!-- 🌝 FORMA 3-->
-        <button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)">Adicionar Contato</button>
-        <!-- {{contato}} -->
+        <!-- ⛳ FORMA1 - NG-OPTIONS -->
+        <!-- <select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras">
+            <option value="">Selecione uma operadora</option>
+        </select> -->
+
+        <!-- ⛳ FORMA2 - NG-OPTIONS -->
+        <select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras">
+            <option value="">Selecione uma operadora</option>
+        </select>
+
+        <!-- 🌝 FORMA 3  >>  ng-disabled="!contato.nome || !contato.telefone"-->
+        <button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone">Adicionar Contato</button>
+        
+        <!-- REMOVER CONTATOS-->
+        <!-- <button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-disabled="!isContatoSelecionado(contatos)">Apagar Contatos</button> -->
+       
+        <!-- ========================== ngShow, ngHide e ngIf ================================ 35 minutos -->
+        <!-- <button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-show="isContatoSelecionado(contatos)">Apagar Contatos</button> -->
+        <button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">Apagar Contatos</button>
     </div>
+
+    <div ng-include="'footer.html'"></div>
+
 
 </body>
 
